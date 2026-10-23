@@ -31,6 +31,22 @@ const applySearch = useDebounceFn(() => {
         { preserveState: true, preserveScroll: true, replace: true },
     );
 }, 300);
+
+/**
+ * Open the member when any part of their row is clicked. Clicks on the name link are left to the
+ * link itself (so Ctrl/middle-click still open a new tab), and selecting text doesn't navigate.
+ */
+function openMember(memberId: number, event: MouseEvent): void {
+    if ((event.target as HTMLElement).closest('a')) {
+        return;
+    }
+
+    if (window.getSelection()?.toString()) {
+        return;
+    }
+
+    router.visit(show(memberId));
+}
 </script>
 
 <template>
@@ -101,13 +117,11 @@ const applySearch = useDebounceFn(() => {
                     <tr
                         v-for="member in members.data"
                         :key="member.id"
-                        class="transition-colors hover:bg-accent/60"
+                        class="cursor-pointer transition-colors hover:bg-accent/60"
+                        @click="openMember(member.id, $event)"
                     >
                         <td class="px-4 py-3">
-                            <Link
-                                :href="show(member.id)"
-                                class="font-medium hover:underline"
-                            >
+                            <Link :href="show(member.id)" class="font-medium">
                                 {{ member.name }}
                             </Link>
                             <p
