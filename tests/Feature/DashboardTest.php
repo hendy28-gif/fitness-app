@@ -18,6 +18,13 @@ test('authenticated users can visit the dashboard', function () {
     $response->assertOk();
 });
 
+test('users can use the app without verifying their email', function () {
+    $user = User::factory()->unverified()->create();
+
+    $this->actingAs($user)->get(route('dashboard'))->assertOk();
+    $this->actingAs($user)->get(route('members.index'))->assertOk();
+});
+
 test('the dashboard only counts the trainer\'s own members and workouts', function () {
     $user = User::factory()->create();
     $member = Member::factory()->for($user)->create();
