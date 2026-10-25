@@ -14,10 +14,11 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property int $user_id
  * @property string $name
+ * @property string|null $category
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['name'])]
+#[Fillable(['name', 'category'])]
 class Exercise extends Model
 {
     /** @use HasFactory<ExerciseFactory> */

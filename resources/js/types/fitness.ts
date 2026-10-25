@@ -25,6 +25,11 @@ export type Exercise = {
     name: string;
 };
 
+export type LibraryExercise = Exercise & {
+    category: string | null;
+    workout_entries_count: number;
+};
+
 export type WorkoutSet = {
     id: number;
     workout_entry_id: number;

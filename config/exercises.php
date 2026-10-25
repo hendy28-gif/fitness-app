@@ -5,8 +5,9 @@
 | Exercise Library
 |--------------------------------------------------------------------------
 |
-| The built-in exercises offered as autocomplete suggestions when logging a
-| workout, grouped by category. Trainers can still type any other name.
+| The default exercise library, grouped by category. Every trainer gets their
+| own copy when they sign up, which they then manage on the Exercises page.
+| Changing this file only affects trainers who sign up afterwards.
 |
 | Exercises under the empty '' key are standalone: they are listed on their
 | own, without a category heading.

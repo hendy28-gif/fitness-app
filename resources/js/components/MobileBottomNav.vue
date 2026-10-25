@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { House, User, Users } from '@lucide/vue';
+import { Dumbbell, House, User, Users } from '@lucide/vue';
 import { useCurrentUrl } from '@/composables/useCurrentUrl';
 import { dashboard } from '@/routes';
+import { index as exercisesIndex } from '@/routes/exercises';
 import { index } from '@/routes/members';
 import { edit } from '@/routes/profile';
 import type { NavItem } from '@/types';
@@ -12,6 +13,7 @@ const { isCurrentOrParentUrl } = useCurrentUrl();
 const items: NavItem[] = [
     { title: 'Home', href: dashboard(), icon: House },
     { title: 'Members', href: index(), icon: Users },
+    { title: 'Exercises', href: exercisesIndex(), icon: Dumbbell },
     { title: 'Profile', href: edit(), icon: User },
 ];
 </script>
@@ -21,7 +23,7 @@ const items: NavItem[] = [
         class="fixed inset-x-0 bottom-0 z-40 border-t bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden"
         aria-label="Primary"
     >
-        <ul class="grid grid-cols-3">
+        <ul class="grid grid-cols-4">
             <li v-for="item in items" :key="item.title">
                 <Link
                     :href="item.href"

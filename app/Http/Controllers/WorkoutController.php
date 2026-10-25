@@ -105,29 +105,23 @@ class WorkoutController extends Controller
     }
 
     /**
-     * Get the autocomplete suggestions: the trainer's own exercises that aren't in the built-in library, then the library by category.
+     * Get the autocomplete suggestions from the trainer's exercise library, grouped by category.
+     * Exercises without a category come last, under an empty category, and are listed without a heading.
      *
      * @return array<int, array{category: string, names: array<int, string>}>
      */
     private function exerciseOptions(User $user): array
     {
-        /** @var array<string, array<int, string>> $library */
-        $library = config('exercises');
-
-        $libraryNames = collect($library)->flatten()->map(fn (string $name): string => mb_strtolower($name))->flip();
-
-        $customNames = $user->exercises()
+        $namesByCategory = $user->exercises()
             ->orderBy('name')
-            ->get(['name'])
-            ->map(fn (Exercise $exercise): string => $exercise->name)
-            ->reject(fn (string $name): bool => $libraryNames->has(mb_strtolower($name)))
-            ->values()
-            ->all();
+            ->get(['name', 'category'])
+            ->groupBy(fn (Exercise $exercise): string => $exercise->category ?? '')
+            ->map(fn ($exercises) => $exercises->map(fn (Exercise $exercise): string => $exercise->name)->values()->all());
 
-        return collect($library)
-            ->map(fn (array $names, string $category): array => ['category' => $category, 'names' => $names])
+        return collect([...$user->categories(), ''])
+            ->filter(fn (string $category): bool => $namesByCategory->has($category))
+            ->map(fn (string $category): array => ['category' => $category, 'names' => $namesByCategory[$category]])
             ->values()
-            ->when($customNames !== [], fn ($options) => $options->prepend(['category' => 'Your exercises', 'names' => $customNames]))
             ->all();
     }
 

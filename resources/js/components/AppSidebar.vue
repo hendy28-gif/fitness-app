@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { LayoutGrid, Users } from '@lucide/vue';
+import { Dumbbell, LayoutGrid, Users } from '@lucide/vue';
 import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -15,6 +15,7 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
+import { index as exercisesIndex } from '@/routes/exercises';
 import { index } from '@/routes/members';
 import type { NavItem } from '@/types';
 
@@ -28,6 +29,11 @@ const mainNavItems: NavItem[] = [
         title: 'Members',
         href: index(),
         icon: Users,
+    },
+    {
+        title: 'Exercises',
+        href: exercisesIndex(),
+        icon: Dumbbell,
     },
 ];
 

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ExerciseController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\MemberProgressController;
 use App\Http\Controllers\WorkoutController;
@@ -16,6 +17,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('members.workouts', WorkoutController::class)
         ->except(['index', 'show'])
         ->scoped();
+
+    Route::resource('exercises', ExerciseController::class)->only(['index', 'store', 'update', 'destroy']);
 });
 
 require __DIR__.'/settings.php';

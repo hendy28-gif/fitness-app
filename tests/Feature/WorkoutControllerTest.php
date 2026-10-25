@@ -22,21 +22,23 @@ test('the log workout page offers the member\'s last workout to copy', function 
             ->where('lastWorkout.id', $latest->id));
 });
 
-test('the log workout page suggests the trainer\'s own exercises before the built-in library', function () {
+test('the log workout page suggests the trainer\'s exercise library by category, uncategorised last', function () {
     $user = User::factory()->create();
     $member = Member::factory()->for($user)->create();
-    Exercise::factory()->for($user)->create(['name' => 'Sandbag Carry']);
-    Exercise::factory()->for($user)->create(['name' => 'bench press']);
-    Exercise::factory()->create(['name' => 'Another Trainer Move']);
+    Exercise::factory()->for($user)->create(['name' => 'Squat', 'category' => 'Legs']);
+    Exercise::factory()->for($user)->create(['name' => 'Hyrox', 'category' => null]);
+    Exercise::factory()->for($user)->create(['name' => 'Bench Press', 'category' => 'Chest']);
+    Exercise::factory()->for($user)->create(['name' => 'Box Squat', 'category' => 'Legs']);
+    Exercise::factory()->create(['name' => 'Another Trainer Move', 'category' => 'Legs']);
 
     $this->actingAs($user)
         ->get(route('members.workouts.create', $member))
         ->assertInertia(fn (Assert $page) => $page
-            ->where('exerciseOptions.0', ['category' => 'Your exercises', 'names' => ['Sandbag Carry']])
-            ->where('exerciseOptions.1.category', 'Chest')
-            ->where('exerciseOptions.1.names', fn ($names) => collect($names)->contains('Bench Press'))
-            ->has('exerciseOptions', count(config('exercises')) + 1)
-            ->where('exerciseOptions.'.count(config('exercises')), ['category' => '', 'names' => ['Functional', 'Hyrox']]));
+            ->where('exerciseOptions', [
+                ['category' => 'Legs', 'names' => ['Box Squat', 'Squat']],
+                ['category' => 'Chest', 'names' => ['Bench Press']],
+                ['category' => '', 'names' => ['Hyrox']],
+            ]));
 });
 
 test('a workout is logged with each set\'s own reps and weight, in order', function () {

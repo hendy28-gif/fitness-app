@@ -65,4 +65,20 @@ class User extends Authenticatable
     {
         return $this->hasMany(Exercise::class);
     }
+
+    /**
+     * Get the exercise categories the user has, in the order they were first created.
+     *
+     * @return array<int, string>
+     */
+    public function categories(): array
+    {
+        return $this->exercises()
+            ->whereNotNull('category')
+            ->groupBy('category')
+            ->orderByRaw('min(id)')
+            ->pluck('category')
+            ->map(fn (mixed $category): string => (string) $category)
+            ->all();
+    }
 }
